@@ -6,6 +6,11 @@ import { useState } from "react";
 export default function Home() {
 
   const [userInput, setUserInput] = useState<String>("");
+
+  const readFile = (file: File) => {
+    // read the file, setUserInput to the string contents
+  }
+
   return (
     <div className="flex flex-col justify-center items-center w-full h-full"> { /* app container */ }
       <div className="h-12 w-full bg-neutral-700 mb-10"> { /* nav bar container */ }
@@ -37,20 +42,24 @@ export default function Home() {
               onChange={(e) => setUserInput(e.target.value)}
             />
           </div>
-          <div> { /* buttons */ }
-            <button
-              className=""
-              onClick={() => alert("You clicked")}
-            >
-              Analyze
-            </button>
-            <button
-              className=""
-              onClick={() => alert("You clicked")}
-            >
-              Reset
-            </button>
-          </div>
+          <div className="w-full h-3/4"> { /* buttons */ }
+            { userInput && (
+              <div>
+                <button
+                  className=""
+                  onClick={() => alert("You clicked")}
+                >
+                  Analyze
+                </button>
+                <button
+                  className=""
+                  onClick={() => alert("You clicked")}
+                >
+                  Reset
+                </button>
+              </div>
+            )}
+          </div> 
           <div> { /* result container */ }
             <p>This is where the result of the analysis will be displayed</p>
           </div>
