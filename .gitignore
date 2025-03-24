@@ -24,7 +24,6 @@ dist-ssr
 *.sw?
 
 backend/.python-version
-backend/.phisheye
 
 docker-compose.yml
 /backend/.phishshield
