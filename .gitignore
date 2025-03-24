@@ -25,3 +25,21 @@ dist-ssr
 
 backend/.python-version
 backend/.phisheye
+backend/.phishshield
+
+# next.js
+.env*
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+*.pem
+build
+.next/
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+coverage
+out
