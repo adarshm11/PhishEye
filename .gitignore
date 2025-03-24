@@ -23,8 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
-backend/.python-version
 
-docker-compose.yml
+.env
+
 /backend/.phishshield
 /backend/.env
