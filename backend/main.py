@@ -11,6 +11,11 @@ app = Flask(__name__)
 def home():
     return 'Hello, World!'
 
+@app.post('/upload-text')
+async def upload_text(file):
+    print(f'Received file: {file}')
+    return
+
 @app.route('/api/testing')
 def get_test_data():
     insert_into_test_table(['ronald', 200, 'ronald@gmail.com'])
