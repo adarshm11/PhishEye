@@ -23,9 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
+
 backend/.python-version
-backend/.phisheye
-backend/.phishshield
 
 # next.js
 .env*
@@ -43,3 +42,9 @@ build
 !.yarn/versions
 coverage
 out
+
+
+.env
+
+/backend/.phishshield
+
