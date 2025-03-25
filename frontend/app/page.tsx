@@ -96,11 +96,11 @@ export default function Home() {
         <div className="flex flex-col justify-center items-center mb-10">
           {/* title container */}
           <h1 className="text-5xl mb-8">PhishShield</h1>
-          <p>Protect yourself from phishing (change this later)</p>
+          <p className="ml-2 sm:ml-4 md:ml-6">Protect yourself from phishing (change this later)</p>
         </div>
         <div className="w-full flex flex-col justify-center items-center">
           {/* main content container */}
-          <div className="w-3/8 h-64 flex flex-col justify-center items-center">
+          <div className="w-[95%] sm:w-[90%] md:w-[85%] lg:w-[80%] xl:w-[70%] h-auto flex flex-col justify-center items-center">
             {/* user input container */}
             <input
               type="file"
@@ -122,8 +122,7 @@ export default function Home() {
             )}
 
             <textarea
-              type="text"
-              className="w-full h-full bg-gray-500 rounded-xl px-4 py-2"
+              className="w-full sm:w-3/4 md:w-1/2 lg:w-2/3 lg:h-64 h-40 sm:h-48 md:h-56 bg-gray-500 rounded-xl px-4 py-2"
               placeholder="Or enter email text content here..."
               onChange={(e) => setUserInput(e.target.value)}
               value={userInput}
