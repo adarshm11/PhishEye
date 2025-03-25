@@ -5,10 +5,34 @@ import { useState } from "react";
 
 export default function Home() {
 
-  const [userInput, setUserInput] = useState<String>("");
+  const [userInput, setUserInput] = useState<string>("");
 
   const readFile = (file: File) => {
     // read the file, setUserInput to the string contents
+  }
+
+  const handleSubmitClick = async () => {
+    console.log("Reached here")
+    if (!userInput) return;
+
+    const formData = new FormData();
+    formData.append("user input", userInput);
+
+    try {
+      const response = await fetch("http://localhost:5001/upload-text", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: formData,
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+      }
+    } catch (error) {
+      console.error("Upload to backend failed");
+    }
   }
 
   return (
@@ -46,14 +70,14 @@ export default function Home() {
             { userInput && (
               <div>
                 <button
-                  className=""
-                  onClick={() => alert("You clicked")}
+                  className="cursor-pointer"
+                  onClick={() => handleSubmitClick()}
                 >
                   Analyze
                 </button>
                 <button
                   className=""
-                  onClick={() => alert("You clicked")}
+                  onClick={(e) => alert("You clicked")}
                 >
                   Reset
                 </button>
