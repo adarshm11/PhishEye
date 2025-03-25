@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import psycopg2
 from dotenv import load_dotenv
@@ -9,7 +9,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 # import the model
 tokenizer = AutoTokenizer.from_pretrained("cybersectony/phishing-email-detection-distilbert_v2.4.1")
@@ -20,15 +20,16 @@ def home():
     return 'Hello, World!'
 
 @app.post('/upload-text')
-def upload_text(file):
-    file = jsonify(file)
-    print(f'Received file: {file}')
-    '''
-    with open(file, 'r'):
-        content = file.read()
-    '''
+def upload_text():
+    user_input = request.form.get("userInput")
+
+    if not user_input:
+        return jsonify({"error": "No input received"}), 400
+
+    # Print and process the received input
+    print(f'Received user input: {user_input}')
     # check whether the domain of the email was in the DB already
-    predictions = predict_phishing(file)
+    predictions = predict_phishing(user_input)
     phishing_chance = round((predictions["all_probabilities"]["phishing_url"] + predictions["all_probabilities"]["phishing_url_alt"])
                              * 100, 2)
     return jsonify({"Phishing Probability": phishing_chance})
