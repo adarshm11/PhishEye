@@ -121,7 +121,7 @@ export default function Home() {
               <div className="mb-2 text-green-400">File loaded: {fileName}</div>
             )}
 
-            <input
+            <textarea
               type="text"
               className="w-full h-full bg-gray-500 rounded-xl px-4 py-2"
               placeholder="Or enter email text content here..."
