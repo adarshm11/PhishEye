@@ -5,7 +5,8 @@ interface FileUploaderProps {
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   fileName: string;
   userInput: string;
-  setUserInput: Dispatch<SetStateAction<string>>;
+  handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  userInputRef: RefObject<HTMLTextAreaElement | null>;
 }
 
 export default function FileUploader({
@@ -13,7 +14,8 @@ export default function FileUploader({
   handleFileChange,
   fileName,
   userInput,
-  setUserInput,
+  handleInputChange,
+  userInputRef,
 }: FileUploaderProps) {
   return (
     <div className="w-[95%] sm:w-[90%] md:w-[85%] lg:w-[80%] xl:w-[70%] h-auto flex flex-col justify-center items-center">
@@ -31,15 +33,16 @@ export default function FileUploader({
         Select File
       </button>
 
-      {fileName && (
+      {fileName && userInput && (
         <div className="mb-2 text-green-400">File loaded: {fileName}</div>
       )}
 
       <textarea
         className="w-full sm:w-3/4 md:w-1/2 lg:w-2/3 lg:h-64 h-40 sm:h-48 md:h-56 bg-gray-500 rounded-xl px-4 py-2"
         placeholder="Or enter email text content here..."
-        onChange={(e) => setUserInput(e.target.value)}
+        onChange={(e) => handleInputChange(e)}
         value={userInput}
+        ref={userInputRef}
       />
     </div>
   );

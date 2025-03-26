@@ -10,6 +10,7 @@ export default function PhishingAnalyzer() {
   const [fileName, setFileName] = useState<string>("");
   const [phishingResult, setPhishingResult] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const userInputRef = useRef<HTMLTextAreaElement>(null);
 
   const readFile = (file: File) => {
     const reader = new FileReader();
@@ -59,6 +60,16 @@ export default function PhishingAnalyzer() {
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (e.target.value) {
+      setUserInput(e.target.value as string);
+    } else {
+      handleReset();
+    }
+    // call setUserInput IF the userInput is not null
+    // if it's null -> set the useRef to be null
+  }
+
   return (
     <div className="flex flex-col justify-center items-center w-full h-full">
       <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
@@ -70,7 +81,8 @@ export default function PhishingAnalyzer() {
             handleFileChange={handleFileChange}
             fileName={fileName}
             userInput={userInput}
-            setUserInput={setUserInput}
+            handleInputChange={handleInputChange}
+            userInputRef={userInputRef}
           />
 
           <div className="w-full h-3/4 flex mt-4 justify-center items-center">
@@ -82,7 +94,7 @@ export default function PhishingAnalyzer() {
             )}
           </div>
 
-          {phishingResult !== null && (
+          {phishingResult !== null && userInput &&(
             <ResultDisplay phishingResult={phishingResult} />
           )}
         </div>
