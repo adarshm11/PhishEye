@@ -96,7 +96,9 @@ export default function Home() {
         <div className="flex flex-col justify-center items-center mb-10">
           {/* title container */}
           <h1 className="text-5xl mb-8">PhishShield</h1>
-          <p className="ml-2 sm:ml-4 md:ml-6">Protect yourself from phishing (change this later)</p>
+          <p className="ml-2 sm:ml-4 md:ml-6">
+            Protect yourself from phishing (change this later)
+          </p>
         </div>
         <div className="w-full flex flex-col justify-center items-center">
           {/* main content container */}
@@ -147,18 +149,59 @@ export default function Home() {
               </div>
             )}
           </div>
-          {/* Result container */}
-          <div>
-            {phishingResult != null && (
-              <p className="text-white text-xl mt-4">
-                Result:{" "}
-                <span className="font-bold text-yellow-300">
-                  {phishingResult}%
-                </span>{" "}
-                likely to be phishing
-              </p>
-            )}
-          </div>
+          {/* Only render the result container if there's a result */}
+          {phishingResult != null && (
+            <div className="mt-6 p-4 bg-gray-800 bg-opacity-70 rounded-xl">
+              <div className="text-center">
+                <p className="text-white text-xl">
+                  Result:{" "}
+                  <span
+                    className={`font-bold ${
+                      phishingResult < 30
+                        ? "text-green-400"
+                        : phishingResult < 70
+                        ? "text-yellow-300"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {phishingResult}%
+                  </span>{" "}
+                  likely to be phishing
+                </p>
+
+                {/* Add additional context based on score */}
+                <p
+                  className={`mt-2 text-sm ${
+                    phishingResult < 30
+                      ? "text-green-400"
+                      : phishingResult < 70
+                      ? "text-yellow-300"
+                      : "text-red-500"
+                  }`}
+                >
+                  {phishingResult < 30
+                    ? "This content appears to be legitimate."
+                    : phishingResult < 70
+                    ? "This content shows some suspicious characteristics."
+                    : "This content is likely a phishing attempt!"}
+                </p>
+
+                {/* Visual indicator */}
+                <div className="w-full bg-gray-700 rounded-full h-2 mt-4">
+                  <div
+                    className={`h-2 rounded-full ${
+                      phishingResult < 30
+                        ? "bg-green-400"
+                        : phishingResult < 70
+                        ? "bg-yellow-300"
+                        : "bg-red-500"
+                    }`}
+                    style={{ width: `${phishingResult}%` }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
