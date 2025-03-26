@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "PhishShield",
   description: "AI-powered phishing detector",
+  icons: {
+    icon: "/favicon.png", 
+  },
 };
 
 export default function RootLayout({
