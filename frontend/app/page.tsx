@@ -1,78 +1,15 @@
-"use client";
-
-import { useState, useRef } from "react";
+// This home page is a Server Component 
+import PhishingAnalyzer from "@/app/components/PhishingAnalyzer";
 
 export default function Home() {
-  const [userInput, setUserInput] = useState<string>("");
-  const [fileName, setFileName] = useState<string>("");
-  const [phishingResult, setPhishingResult] = useState<number | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const readFile = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if (e.target?.result) {
-        setUserInput(e.target.result as string);
-        setFileName(file.name);
-      }
-    };
-    reader.readAsText(file);
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      readFile(files[0]);
-    }
-  };
-
-  const handleSubmitClick = async () => {
-    console.log("Reached here");
-    if (!userInput) return;
-
-    const formData = new FormData();
-    formData.append("userInput", userInput);
-
-    try {
-      const response = await fetch("http://localhost:5001/upload-text", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        setPhishingResult(data["Phishing Probability"]);
-      }
-    } catch (error) {
-      console.error("Upload to backend failed" + error);
-    }
-  };
-
-  const handleReset = () => {
-    setUserInput("");
-    setFileName("");
-    setPhishingResult(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
   return (
     <div className="flex flex-col justify-center items-center w-full h-full">
       <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
-      {/* app container */}
+
+      {/* Server-rendered navigation */}
       <div className="h-12 w-full bg-neutral-700 mb-10">
-        {/* nav bar container */}
         <nav className="mx-4 my-1">
-          {/* logo */}
-          {/* about us page */}
-          {/* github link */}
-          {/* dark mode / light mode button */}
-          <button
-            onClick={() => alert("You Clicked")}
-            className="cursor-pointer rounded-md hover:bg-neutral-400"
-          >
+          <button className="cursor-pointer rounded-md hover:bg-neutral-400">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
@@ -91,118 +28,18 @@ export default function Home() {
           </button>
         </nav>
       </div>
+
       <div className="w-full">
-        {/* body container */}
+        {/* Server-rendered header */}
         <div className="flex flex-col justify-center items-center mb-10">
-          {/* title container */}
           <h1 className="text-5xl mb-8">PhishShield</h1>
           <p className="ml-2 sm:ml-4 md:ml-6">
             Protect yourself from phishing (change this later)
           </p>
         </div>
-        <div className="w-full flex flex-col justify-center items-center">
-          {/* main content container */}
-          <div className="w-[95%] sm:w-[90%] md:w-[85%] lg:w-[80%] xl:w-[70%] h-auto flex flex-col justify-center items-center">
-            {/* user input container */}
-            <input
-              type="file"
-              accept=".txt,.text"
-              className="hidden"
-              onChange={handleFileChange}
-              ref={fileInputRef}
-            />
-            <button
-              className="mb-4 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded cursor-pointer"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              Select File
-            </button>
 
-            {/* Display filename when available */}
-            {fileName && (
-              <div className="mb-2 text-green-400">File loaded: {fileName}</div>
-            )}
-
-            <textarea
-              className="w-full sm:w-3/4 md:w-1/2 lg:w-2/3 lg:h-64 h-40 sm:h-48 md:h-56 bg-gray-500 rounded-xl px-4 py-2"
-              placeholder="Or enter email text content here..."
-              onChange={(e) => setUserInput(e.target.value)}
-              value={userInput}
-            />
-          </div>
-          <div className="w-full h-3/4 flex mt-4 justify-center items-center">
-            {/* buttons */}
-            {userInput && (
-              <div className="flex space-x-4">
-                <button
-                  className="cursor-pointer rounded-md px-4 py-2 bg-purple-600 hover:bg-purple-700"
-                  onClick={() => handleSubmitClick()}
-                >
-                  Analyze
-                </button>
-                <button
-                  className="cursor-pointer rounded-md px-4 py-2 bg-purple-600 hover:bg-purple-700"
-                  onClick={handleReset}
-                >
-                  Reset
-                </button>
-              </div>
-            )}
-          </div>
-          {/* Only render the result container if there's a result */}
-          {phishingResult != null && (
-            <div className="mt-6 p-4 bg-gray-800 bg-opacity-70 rounded-xl">
-              <div className="text-center">
-                <p className="text-white text-xl">
-                  Result:{" "}
-                  <span
-                    className={`font-bold ${
-                      phishingResult < 30
-                        ? "text-green-400"
-                        : phishingResult < 70
-                        ? "text-yellow-300"
-                        : "text-red-500"
-                    }`}
-                  >
-                    {phishingResult}%
-                  </span>{" "}
-                  likely to be phishing
-                </p>
-
-                {/* Add additional context based on score */}
-                <p
-                  className={`mt-2 text-sm ${
-                    phishingResult < 30
-                      ? "text-green-400"
-                      : phishingResult < 70
-                      ? "text-yellow-300"
-                      : "text-red-500"
-                  }`}
-                >
-                  {phishingResult < 30
-                    ? "This content appears to be legitimate."
-                    : phishingResult < 70
-                    ? "This content shows some suspicious characteristics."
-                    : "This content is likely a phishing attempt!"}
-                </p>
-
-                {/* Visual indicator */}
-                <div className="w-full bg-gray-700 rounded-full h-2 mt-4">
-                  <div
-                    className={`h-2 rounded-full ${
-                      phishingResult < 30
-                        ? "bg-green-400"
-                        : phishingResult < 70
-                        ? "bg-yellow-300"
-                        : "bg-red-500"
-                    }`}
-                    style={{ width: `${phishingResult}%` }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        {/* Client-side interactive component */}
+        <PhishingAnalyzer />
       </div>
     </div>
   );
