@@ -1,4 +1,4 @@
-// This home page is a Server Component 
+// This home page is a Server Component
 import PhishingAnalyzer from "@/app/components/PhishingAnalyzer";
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
       {/* Server-rendered navigation */}
       <div className="h-12 w-full bg-neutral-700 mb-10">
         <nav className="mx-4 my-1">
-          <button className="cursor-pointer rounded-md hover:bg-neutral-400">
+          <button className="cursor-pointer rounded-md hover:bg-neutral-500 mt-1.5">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
@@ -24,6 +24,31 @@ export default function Home() {
                 strokeWidth="1.5"
                 d="M21 12.808c-.5 5.347-5.849 9.14-11.107 7.983C-.078 18.6 1.15 3.909 11.11 3C6.395 9.296 14.619 17.462 21 12.808"
               />
+            </svg>
+          </button>
+          <button className="cursor-pointer rounded-md hover:bg-neutral-500 mt-1.5">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+            >
+              <g fill="none">
+                <g
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  clipPath="url(#mageSun0)"
+                >
+                  <path d="M12 17.885a5.885 5.885 0 1 0 0-11.77a5.885 5.885 0 0 0 0 11.77m-9.281-5.879H1.5m21 0h-1.207m-9.287-9.287V1.5m0 21v-1.207M5.435 5.435l-.859-.859m14.848 14.848l-.86-.86m.001-13.129l.858-.859M4.576 19.424l.86-.86" />
+                </g>
+                <defs>
+                  <clipPath id="mageSun0">
+                    <path fill="#fff" d="M0 0h24v24H0z" />
+                  </clipPath>
+                </defs>
+              </g>
             </svg>
           </button>
         </nav>
