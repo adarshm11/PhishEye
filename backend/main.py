@@ -31,6 +31,10 @@ def upload_text(file):
     predictions = predict_phishing(file)
     phishing_chance = round((predictions["all_probabilities"]["phishing_url"] + predictions["all_probabilities"]["phishing_url_alt"])
                              * 100, 2)
+    if phishing_chance >= 90:
+        # put the user into the DB
+        pass
+
     return jsonify({"Phishing Probability": phishing_chance})
     
 def predict_phishing(input_text):
@@ -69,9 +73,11 @@ def predict_phishing(input_text):
 
 @app.route('/api/testing')
 def get_test_data():
+    '''
     insert_into_test_table(['ronald', 200, 'ronald@gmail.com'])
     results = select_all_from_test_table()
     return jsonify(results)
+    '''
 
 def get_connection():
     """Get a connection to the PostgreSQL database."""
@@ -83,40 +89,33 @@ def get_connection():
         password=os.getenv('POSTGRES_PASSWORD') 
     )
 
-def select_all_from_test_table():
-    """Select all records from test_table."""
+def add_entry_to_db(user):
+    '''Add a new user to the database'''
     try:
         conn = get_connection()
         cursor = conn.cursor()
-        
-        cursor.execute("SELECT * FROM test_table")
-        
-        records = cursor.fetchall()
-        
-        cursor.close()
-        conn.close()
-        
-        return records
+        query = f'''
+            INSERT INTO blacklisted_domains (email_address)
+            VALUES ("{user}")
+        '''
     except Exception as e:
-        print(f"Error: {e}")
-        return []
+        pass
 
-def insert_into_test_table(data):
-    """Insert data into test_table."""
+def check_blacklisted_domain(user):
+    '''Check if the sending user of the email is in the database -> don't need to check in model'''
     try:
         conn = get_connection()
         cursor = conn.cursor()
-        
-        cursor.execute("INSERT INTO test_table (name, age, email) VALUES (%s, %s, %s)", data)
-        
-        conn.commit()
-        
-        cursor.close()
-        conn.close()
-        
-        return True
+        query = f'''
+            SELECT 1 FROM blacklisted_domains
+            WHERE email_address = {user}
+        '''
+        cursor.execute(query)
+        # check if the return is None -> handle appropriately
     except Exception as e:
-        print(f"Error: {e}")
+        pass
+
+
     
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5001)
