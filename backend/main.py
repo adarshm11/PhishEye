@@ -71,9 +71,10 @@ def predict_phishing(input_text):
         "all_probabilities": labels
     }
 
+'''
 @app.route('/api/testing')
 def get_test_data():
-    '''
+    
     insert_into_test_table(['ronald', 200, 'ronald@gmail.com'])
     results = select_all_from_test_table()
     return jsonify(results)
@@ -96,10 +97,15 @@ def add_entry_to_db(user):
         cursor = conn.cursor()
         query = f'''
             INSERT INTO blacklisted_domains (email_address)
-            VALUES ("{user}")
+            VALUES ?
         '''
+        cursor.execute(query, (user))
+        cursor.close()
+        conn.commit()
+        conn.close()
+
     except Exception as e:
-        pass
+        print(f'Error adding to DB: {e}')
 
 def check_blacklisted_domain(user):
     '''Check if the sending user of the email is in the database -> don't need to check in model'''
@@ -108,13 +114,16 @@ def check_blacklisted_domain(user):
         cursor = conn.cursor()
         query = f'''
             SELECT 1 FROM blacklisted_domains
-            WHERE email_address = {user}
+            WHERE email_address = ?
         '''
-        cursor.execute(query)
+        cursor.execute(query, (user,))
+        check = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return check is not None
         # check if the return is None -> handle appropriately
     except Exception as e:
-        pass
-
+        print(f'Error fetching from DB: {e}')
 
     
 if __name__ == "__main__":
