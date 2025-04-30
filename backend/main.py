@@ -99,7 +99,7 @@ def add_entry_to_db(user):
             INSERT INTO blacklisted_domains (email_address)
             VALUES ?
         '''
-        cursor.execute(query, (user))
+        cursor.execute(query, (user,))
         cursor.close()
         conn.commit()
         conn.close()
