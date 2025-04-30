@@ -3,3 +3,4 @@ psycopg2-binary
 torch
 transformers
 flask_cors
+dotenv
