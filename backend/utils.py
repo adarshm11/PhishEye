@@ -46,11 +46,40 @@ def get_connection():
         password=os.getenv('POSTGRES_PASSWORD') 
     )
 
-def check_if_domain_in_db():
+def check_if_domain_in_db(user: str) -> bool | None:
     '''Check if a domain was in the blacklisted domain database'''
-    pass
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        query = f'''
+            SELECT 1 FROM blacklisted_domains
+            WHERE email_address = ?
+        '''
+        cursor.execute(query, (user,))
+        check = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return check is not None # if check finds a value in DB, return True, else return False
+    
+    except Exception as e:
+        print(f'Error fetching from DB: {e}')
+        return None # error occurred, so return neither True nor False -> helps user determine error or not
 
-def add_domain_to_db():
+def add_domain_to_db(user: str) -> bool:
     '''Add a new domain to the blacklisted domain database'''
-    pass
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        query = f'''
+            INSERT INTO blacklisted_domains (email_address)
+            VALUES ?
+        '''
+        cursor.execute(query, (user,))
+        cursor.close()
+        conn.commit()
+        conn.close()
+        return True # successfully added
 
+    except Exception as e:
+        print(f'Error adding to DB: {e}')
+        return False # unsuccessful in adding
