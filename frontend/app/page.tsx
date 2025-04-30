@@ -64,7 +64,7 @@ export default function Home() {
         <div className="flex flex-col justify-center items-center mb-10">
           <h1 className="text-5xl mb-8">PhishShield</h1>
           <p className="ml-2 sm:ml-4 md:ml-6">
-            Protect yourself from phishing (change this later)
+            Protect yourself from phishing
           </p>
         </div>
         {/* Client-side interactive component */}
