@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
-from utils import load_model, predict_phishing, get_connection
+from utils import predict_phishing
 
 load_dotenv()
 
