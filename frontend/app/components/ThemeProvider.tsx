@@ -33,10 +33,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Update document class and localStorage when theme changes
   useEffect(() => {
     if (typeof window !== "undefined") {
+      const root = window.document.documentElement;
       if (theme === "dark") {
-        document.documentElement.classList.add("dark");
+        root.classList.add("dark");
       } else {
-        document.documentElement.classList.remove("dark");
+        root.classList.remove("dark");
       }
       localStorage.setItem("theme", theme);
     }

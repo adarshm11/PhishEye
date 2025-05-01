@@ -8,7 +8,11 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="cursor-pointer rounded-md hover:bg-neutral-500 dark:hover:bg-neutral-600 mt-1.5 p-1"
+      className={`cursor-pointer rounded-md mt-1.5 p-1 ${
+        theme === "dark"
+          ? "text-white hover:bg-neutral-700"
+          : "text-black hover:bg-neutral-200"
+      }`}
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
     >
       {theme === "dark" ? (
