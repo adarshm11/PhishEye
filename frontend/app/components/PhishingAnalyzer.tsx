@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useTheme } from "./ThemeProvider";
 import FileUploader from "./FileUploader";
 import ActionButtons from "./ActionButtons";
 import ResultDisplay from "./ResultDisplay";
@@ -10,6 +11,7 @@ export default function PhishingAnalyzer() {
   const [fileName, setFileName] = useState<string>("");
   const [phishingResult, setPhishingResult] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { theme } = useTheme();
 
   const readFile = (file: File) => {
     const reader = new FileReader();
@@ -61,7 +63,11 @@ export default function PhishingAnalyzer() {
 
   return (
     <div className="flex flex-col justify-center items-center w-full h-full">
-      <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
+      {theme === "dark" ? (
+        <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
+      ) : (
+        <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#63e_100%)]"></div>
+      )}
 
       <div className="w-full">
         <div className="w-full flex flex-col justify-center items-center">
