@@ -48,3 +48,5 @@ out
 
 /backend/.phishshield
 
+__pycache__
+
