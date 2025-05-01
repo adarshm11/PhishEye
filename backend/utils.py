@@ -46,11 +46,43 @@ def get_connection():
         password=os.getenv('POSTGRES_PASSWORD') 
     )
 
-def check_if_domain_in_db():
-    '''Check if a domain was in the blacklisted domain database'''
-    pass
+def check_if_domain_in_db(domain_name: str) -> bool:
+    '''Check if a domain is in the blacklisted domain database'''
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT 1 FROM blacklisted_domains WHERE domain_name = %s LIMIT 1;",
+                (domain_name,)
+            )
+            return cur.fetchone() is not None
+    finally:
+        conn.close()
 
-def add_domain_to_db():
+def add_domain_to_db(domain_name: str) -> None:
     '''Add a new domain to the blacklisted domain database'''
-    pass
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO blacklisted_domains (domain_name) VALUES (%s) ON CONFLICT DO NOTHING;",
+                (domain_name,)
+            )
+            conn.commit()
+    finally:
+        conn.close()
 
+def create_table_if_not_exists():
+    '''Create the blacklisted domain table if it doesn't exist'''
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS blacklisted_domains (
+                    id SERIAL PRIMARY KEY,
+                    domain_name TEXT NOT NULL
+                );
+            """)
+            conn.commit()
+    finally:
+        conn.close()

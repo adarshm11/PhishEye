@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
-from utils import predict_phishing
+from utils import predict_phishing, create_table_if_not_exists
 
 load_dotenv()
 
@@ -21,7 +21,12 @@ def upload_text():
 
     # Print and process the received input
     print(f'Received user input: {user_input}')
-    # check whether the domain of the email was in the DB already
+    # Create blacklisted domain table if it doesn't exist
+    create_table_if_not_exists()
+    # TODO: Get domain of the email
+    # TODO: check whether the domain of the email was in the DB already
+    # TODO: if domain exists in DB, do not call predict_phishing and return directly
+    # TODO: if domain does not exist in DB, we continue
     predictions = predict_phishing(user_input)
     phishing_chance = predictions['phishing chance']
     return jsonify({"Phishing Probability": phishing_chance})
