@@ -5,6 +5,7 @@ import { useTheme } from "./ThemeProvider";
 import FileUploader from "./FileUploader";
 import ActionButtons from "./ActionButtons";
 import ResultDisplay from "./ResultDisplay";
+import Tesseract from "tesseract.js";
 
 export default function PhishingAnalyzer() {
   const [userInput, setUserInput] = useState<string>("");
@@ -15,13 +16,21 @@ export default function PhishingAnalyzer() {
 
   const readFile = (file: File) => {
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       if (e.target?.result) {
-        setUserInput(e.target.result as string);
+        const imageDataURL = e.target.result as string;
         setFileName(file.name);
+
+        try {
+          const result = await Tesseract.recognize(imageDataURL, "eng");
+          setUserInput(result.data.text);
+        } catch (error) {
+          console.log("Image parse failed: ", error);
+          setUserInput("");
+        }
       }
     };
-    reader.readAsText(file);
+    reader.readAsDataURL(file);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +86,7 @@ export default function PhishingAnalyzer() {
             fileName={fileName}
             userInput={userInput}
             setUserInput={setUserInput}
+            handleReset={handleReset}
           />
 
           <div className="w-full h-3/4 flex mt-4 justify-center items-center">

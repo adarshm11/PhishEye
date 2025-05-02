@@ -6,6 +6,7 @@ interface FileUploaderProps {
   fileName: string;
   userInput: string;
   setUserInput: Dispatch<SetStateAction<string>>;
+  handleReset: () => void;
 }
 
 export default function FileUploader({
@@ -14,12 +15,22 @@ export default function FileUploader({
   fileName,
   userInput,
   setUserInput,
+  handleReset
 }: FileUploaderProps) {
+
+  const handleUserInputChange = (text: string) => {
+    if (text) {
+      setUserInput(text);
+    } else {
+      handleReset();
+    }
+  }
   return (
     <div className="w-[95%] sm:w-[90%] md:w-[85%] lg:w-[80%] xl:w-[70%] h-auto flex flex-col justify-center items-center">
+      { /* later -> check for .heic and convert */ }
       <input
         type="file"
-        accept=".txt,.text"
+        accept=".png, .jpeg, .jpg" 
         className="hidden"
         onChange={handleFileChange}
         ref={fileInputRef}
@@ -38,7 +49,7 @@ export default function FileUploader({
       <textarea
         className="w-full sm:w-3/4 md:w-1/2 lg:w-2/3 lg:h-64 h-40 sm:h-48 md:h-56 bg-gray-500 rounded-xl px-4 py-2"
         placeholder="Or enter email text content here..."
-        onChange={(e) => setUserInput(e.target.value)}
+        onChange={(e) => handleUserInputChange(e.target.value)}
         value={userInput}
       />
     </div>
