@@ -34,7 +34,7 @@ def predict_phishing(input_text):
     if pred_label == 'legitimate':
         confidence = 1 - confidence
     
-    return {'phishing chance': confidence * 100} # format the confidence as a percentage of 100
+    return {'Phishing Probability': confidence * 100} # format the confidence as a percentage of 100
 
 def get_connection():
     '''Get a connection to the PostgreSQL database.'''
@@ -46,7 +46,7 @@ def get_connection():
         password=os.getenv('POSTGRES_PASSWORD') 
     )
 
-def check_if_domain_in_db(domain_name: str) -> bool:
+def check_if_domain_in_db(domain_name: str) -> bool | None:
     '''Check if a domain is in the blacklisted domain database'''
     conn = get_connection()
     try:
@@ -56,10 +56,13 @@ def check_if_domain_in_db(domain_name: str) -> bool:
                 (domain_name,)
             )
             return cur.fetchone() is not None
+    except Exception as e:
+        print(f'Error querying DB: {e}')
+        return None
     finally:
         conn.close()
 
-def add_domain_to_db(domain_name: str) -> None:
+def add_domain_to_db(domain_name: str) -> bool:
     '''Add a new domain to the blacklisted domain database'''
     conn = get_connection()
     try:
@@ -69,10 +72,14 @@ def add_domain_to_db(domain_name: str) -> None:
                 (domain_name,)
             )
             conn.commit()
+        return True
+    except Exception as e:
+        print(f'Error when adding to DB: {e}')
+        return False
     finally:
         conn.close()
 
-def create_table_if_not_exists():
+def create_table_if_not_exists() -> bool:
     '''Create the blacklisted domain table if it doesn't exist'''
     conn = get_connection()
     try:
@@ -84,5 +91,9 @@ def create_table_if_not_exists():
                 );
             """)
             conn.commit()
+        return True
+    except Exception as e:
+        print(f'Error creating table: {e}')
+        return False
     finally:
         conn.close()
