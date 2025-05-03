@@ -38,27 +38,29 @@ export default function PhishingAnalyzer() {
   };
 
   const parseEmailContent = (email: string) => {
-    // First, use Regex to replace "|" with "I" -> Tesseract parsing bug
     const correctI = /\|/g;
-    var cleanedEmail = email.replace(correctI, "I");
-
-    // Then, use Regex to remove all special characters (outside of punctuation)
-    const allowedCharacters = /[^a-zA-Z0-9 .,!?;:'"()@\-]/g;
-    cleanedEmail = cleanedEmail.replace(allowedCharacters, "");
-    
-    // Finally, separate the sender and the email
+    const cleanedEmail = email.replace(correctI, "I");
+    console.log("Cleaned email is:", cleanedEmail);
     const match = cleanedEmail.match(
-      /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})[\s\S]*?\b(?:Dear|Hi|Hello)\b\s+[A-Z][a-zA-Z]*,([\s\S]*)/
+      /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/
     );
-    
+
+    let sender = "";
+    let emailContent = "";
+
     if (match) {
-      const sender = match[1];                             // e.g., "notifications@smartrecruiters.com"
-      const emailContent = `${cleanedEmail.match(/\b(?:Dear|Hi|Hello)\b\s+[A-Z][a-zA-Z]*,/g)?.[0] ?? ""}${match[2]}`.trim();
-      console.log({ sender, emailContent });
+      sender = match[0];
+      console.log("Sender is:", sender);
+      emailContent =
+        cleanedEmail.match(
+          /\b(?:Dear|Hi|Hello)\b\s+([A-Z][a-zA-Z]*(?:\s+[A-Z][a-zA-Z]*)*)[,|:]\s*([\s\S]*)/
+        )?.[0] ?? "";
+      console.log("Email content is:", emailContent);
     } else {
       console.log("Pattern not matched.");
     }
-    return ["Sender", cleanedEmail];
+
+    return [sender, emailContent];
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
