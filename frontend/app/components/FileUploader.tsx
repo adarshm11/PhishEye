@@ -4,8 +4,10 @@ interface FileUploaderProps {
   fileInputRef: RefObject<HTMLInputElement | null>;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   fileName: string;
-  userInput: string;
-  setUserInput: Dispatch<SetStateAction<string>>;
+  inputEmail: string;
+  setInputEmail: Dispatch<SetStateAction<string>>;
+  emailSender: string;
+  setEmailSender: Dispatch<SetStateAction<string>>;
   handleReset: () => void;
 }
 
@@ -13,16 +15,26 @@ export default function FileUploader({
   fileInputRef,
   handleFileChange,
   fileName,
-  userInput,
-  setUserInput,
+  inputEmail,
+  setInputEmail,
+  emailSender,
+  setEmailSender,
   handleReset
 }: FileUploaderProps) {
 
-  const handleUserInputChange = (text: string) => {
-    if (text) {
-      setUserInput(text);
-    } else {
-      handleReset();
+  const handleUserInputChange = (text: string, section: number) => {
+    if (section === 1) { // the email sender changed
+      if (!text && !inputEmail) {
+        handleReset();
+      } else {
+        setEmailSender(text);
+      }
+    } else if (section === 2) { // the email content changed
+      if (!text && !emailSender) {
+        handleReset();
+      } else {
+        setInputEmail(text);
+      }
     }
   }
   return (
@@ -47,10 +59,17 @@ export default function FileUploader({
       )}
 
       <textarea
+        className="w-full sm:w-3/4 md:w-1/2 lg:w-2/3 lg:h-24 h-16 sm:h-20 md:h-24 bg-gray-500 rounded-xl px-4 py-2 mb-10"
+        placeholder="Sender..."
+        onChange={(e) => handleUserInputChange(e.target.value, 1)}
+        value={emailSender}
+      />
+
+      <textarea
         className="w-full sm:w-3/4 md:w-1/2 lg:w-2/3 lg:h-64 h-40 sm:h-48 md:h-56 bg-gray-500 rounded-xl px-4 py-2"
-        placeholder="Or enter email text content here..."
-        onChange={(e) => handleUserInputChange(e.target.value)}
-        value={userInput}
+        placeholder="Email text content..."
+        onChange={(e) => handleUserInputChange(e.target.value, 2)}
+        value={inputEmail}
       />
     </div>
   );

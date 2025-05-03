@@ -8,7 +8,8 @@ import ResultDisplay from "./ResultDisplay";
 import Tesseract from "tesseract.js";
 
 export default function PhishingAnalyzer() {
-  const [userInput, setUserInput] = useState<string>("");
+  const [inputEmail, setInputEmail] = useState<string>("");
+  const [emailSender, setEmailSender] = useState<string>("");
   const [fileName, setFileName] = useState<string>("");
   const [phishingResult, setPhishingResult] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -23,14 +24,41 @@ export default function PhishingAnalyzer() {
 
         try {
           const result = await Tesseract.recognize(imageDataURL, "eng");
-          setUserInput(result.data.text);
+          const splitEmail = parseEmailContent(result.data.text);
+          setEmailSender(splitEmail[0]);
+          setInputEmail(splitEmail[1]);
         } catch (error) {
           console.log("Image parse failed: ", error);
-          setUserInput("");
+          setEmailSender("");
+          setInputEmail("");
         }
       }
     };
     reader.readAsDataURL(file);
+  };
+
+  const parseEmailContent = (email: string) => {
+    // First, use Regex to replace "|" with "I" -> Tesseract parsing bug
+    const correctI = /\|/g;
+    var cleanedEmail = email.replace(correctI, "I");
+
+    // Then, use Regex to remove all special characters (outside of punctuation)
+    const allowedCharacters = /[^a-zA-Z0-9 .,!?;:'"()@\-]/g;
+    cleanedEmail = cleanedEmail.replace(allowedCharacters, "");
+    
+    // Finally, separate the sender and the email
+    const match = cleanedEmail.match(
+      /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})[\s\S]*?\b(?:Dear|Hi|Hello)\b\s+[A-Z][a-zA-Z]*,([\s\S]*)/
+    );
+    
+    if (match) {
+      const sender = match[1];                             // e.g., "notifications@smartrecruiters.com"
+      const emailContent = `${cleanedEmail.match(/\b(?:Dear|Hi|Hello)\b\s+[A-Z][a-zA-Z]*,/g)?.[0] ?? ""}${match[2]}`.trim();
+      console.log({ sender, emailContent });
+    } else {
+      console.log("Pattern not matched.");
+    }
+    return ["Sender", cleanedEmail];
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,10 +69,11 @@ export default function PhishingAnalyzer() {
   };
 
   const handleSubmitClick = async () => {
-    if (!userInput) return;
+    if (!inputEmail) return;
 
     const formData = new FormData();
-    formData.append("userInput", userInput);
+    formData.append("inputEmail", inputEmail);
+    formData.append("emailSender", emailSender);
 
     try {
       const response = await fetch("http://localhost:5001/upload-text", {
@@ -62,9 +91,10 @@ export default function PhishingAnalyzer() {
   };
 
   const handleReset = () => {
-    setUserInput("");
+    setInputEmail("");
     setFileName("");
     setPhishingResult(null);
+    setEmailSender("");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -84,13 +114,15 @@ export default function PhishingAnalyzer() {
             fileInputRef={fileInputRef}
             handleFileChange={handleFileChange}
             fileName={fileName}
-            userInput={userInput}
-            setUserInput={setUserInput}
+            inputEmail={inputEmail}
+            setInputEmail={setInputEmail}
+            emailSender={emailSender}
+            setEmailSender={setEmailSender}
             handleReset={handleReset}
           />
 
           <div className="w-full h-3/4 flex mt-4 justify-center items-center">
-            {userInput && (
+            {inputEmail && emailSender && (
               <ActionButtons
                 onAnalyze={handleSubmitClick}
                 onReset={handleReset}
