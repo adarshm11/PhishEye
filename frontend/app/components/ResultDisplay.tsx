@@ -1,12 +1,25 @@
 interface ResultDisplayProps {
   phishingResult: number;
+  theme: "light" | "dark";
 }
 
-export default function ResultDisplay({ phishingResult }: ResultDisplayProps) {
+export default function ResultDisplay({
+  phishingResult,
+  theme,
+}: ResultDisplayProps) {
   return (
-    <div className="mt-6 p-4 bg-gray-800 bg-opacity-70 rounded-xl">
+    <div
+      className={`mt-6 p-4 rounded-xl ${
+        theme === "dark"
+          ? "bg-gray-800 bg-opacity-70"
+          : "bg-white bg-opacity-80 border border-gray-300"
+      }`}
+    >
       <div className="text-center">
-        <p className="text-white text-xl">
+        <p
+          className="text-xl"
+          style={{ color: theme === "dark" ? "white" : "black" }}
+        >
           Result:{" "}
           <span
             className={`font-bold ${

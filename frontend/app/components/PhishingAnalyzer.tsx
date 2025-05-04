@@ -133,7 +133,7 @@ export default function PhishingAnalyzer() {
           </div>
 
           {phishingResult !== null && (
-            <ResultDisplay phishingResult={phishingResult} />
+            <ResultDisplay phishingResult={phishingResult} theme={theme}/>
           )}
         </div>
       </div>

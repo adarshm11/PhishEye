@@ -14,7 +14,7 @@ def home():
 
 @app.post('/upload-text')
 def upload_text():
-    email_input = request.form.get("userInput")
+    email_input = request.form.get("inputEmail")
     domain_name = request.form.get("emailSender")
 
 
