@@ -17,7 +17,6 @@ def upload_text():
     email_input = request.form.get("inputEmail")
     domain_name = request.form.get("emailSender")
 
-
     if not email_input or not domain_name:
         return jsonify({"error": "No input received"}), 400
 
