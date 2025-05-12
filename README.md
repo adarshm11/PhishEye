@@ -1,5 +1,5 @@
 # PhishShield
-
+![image](https://github.com/user-attachments/assets/7194453c-298b-4bfa-97f2-2e0823c88dd4)
 # Overview
 With so many modes of online communication nowadays, there are a large assortment of risks. Phishing is a common practice on texting and emailing apps, with users encountering messages that appear to be from a known source with routine instructions but instead lead to the compromising of critical information. For this reason, there is a need to protect online users from the dangers of phishing. PhishShield seeks to accomplish this, utilizing machine learning and natural language processing to evaluate messages and predict whether or not these messages contain phishing attempts. 
 Recent research has demonstrated the effectiveness of BERT-based models for phishing detection in emails. Notably, DistilBERT has proven to be the most efficient model, offering high accuracy while utilizing fewer computational resources [1]. By leveraging this research, PhishShield can adopt a similar approach to enhance phishing detection.
